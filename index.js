@@ -33,9 +33,9 @@ async function run() {
     //add blog
     app.post("/blog", async (req, res) => {
       console.log(req.body);
-      console.log(req.body);
       const name = req.body.name;
       const email = req.body.email;
+      const category = req.body.category;
       const title = req.body.title;
       const description = req.body.description;
       const date=req.body.date;
@@ -48,6 +48,7 @@ async function run() {
       const post = {
         name,
         email,
+        category,
         title,
         description,
         date,
@@ -61,9 +62,17 @@ async function run() {
     //get blog
     app.get("/blog", async (req, res) => {
       const cursor = blogCollection.find({});
+      console.log('hit api');
       const order = await cursor.toArray();
       res.send(order);
     });
+//delete 
+    app.delete("/blog/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await blogCollection.deleteOne(query);
+        res.json(result);
+      });
     
   } finally {
     //await client.close()
